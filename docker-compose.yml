@@ -1,5 +1,4 @@
 name: personalized-chatbot
-version: '3.4'
 services:
   weaviate:
     command:
