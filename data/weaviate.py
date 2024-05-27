@@ -57,17 +57,18 @@ def upload_data():
 
 
 def check_data():
-    for item in sample_data:
-        response = requests.get(f"{URL}/objects/{item['uuid']}")
-        if response.status_code != 200:
-            print(
-                f"Data with UUID {item['uuid']} not found. error: {response.text}"
-            )
-            print(f"Failed to check data. Status code: {response.status_code}")
-        else:
-            print(
-                f"Data with UUID {item['uuid']} exists. Response: {response.json()}"
-            )
+    print("Checking data...")
+    response = requests.get(f"{URL}/objects")
+
+    if response.status_code != 200:
+        print(f"Failed to retrieve objects. error: {response.text}")
+        print(f"Failed to retrieve objects. Status code: {response.status_code}")
+        sys.exit(1)
+
+    objects = response.json().get("objects", [])
+    for obj in objects:
+        obj_uuid = obj["properties"]["uuid"]
+        print(f"Data with UUID {obj_uuid} exists.")
 
 
 def delete_data(uuid=None):
@@ -107,7 +108,7 @@ def delete_data(uuid=None):
 # Main script
 if __name__ == "__main__":
     # for debugging
-    # delete_data()
+    # check_data()
     if len(sys.argv) < 2 or sys.argv[1] not in [
         "schema",
         "upload",
