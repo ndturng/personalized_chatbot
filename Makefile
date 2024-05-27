@@ -9,12 +9,17 @@ build:
 run:
 	docker-compose up -d
 # create schema
-weaviate-init-data:
-	python scripts/weaviate_startup.py all
-
+create-schema:
+	python data/weaviate.py schema
+# upload sample data
+upload-data:
+	python data/weaviate.py upload
+# check data
+check-data:
+	python data/weaviate.py check
 # delete all data
-weaviate-delete-data:
-	python scripts/weaviate_startup.py delete
+delete-data:
+	python data/weaviate.py delete
 
 # Stop Docker containers
 stop:
@@ -24,9 +29,12 @@ stop:
 help:
 	@echo ""
 	@echo "Available targets:"
+	@echo "  help         Show this help message"
 	@echo "  build        Build the Docker containers"
 	@echo "  run          Run the Docker containers"
 	@echo "  stop         Stop the Docker containers"
-	@echo "  weaviate-init-data          Create schema and import data"
-	@echo "  weaviate-delete-data          Delete all data"
-	@echo "  help         Show this help message"
+	@echo "  "
+	@echo "  create-schema 				Create schema"
+	@echo "  upload-data 				Upload sample data"
+	@echo "  check-data 				Check data"
+	@echo "  delete-data 				Delete all data"
