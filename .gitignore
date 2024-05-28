@@ -38,3 +38,4 @@ yarn-error.log*
 .env*.local
 
 local-data
+*.cpython-310.pyc

@@ -1,3 +1,5 @@
+import json
+from pathlib import Path
 import sys
 
 import requests
@@ -46,6 +48,21 @@ def check_schema(schema_name=None):
 
 def upload_data():
     for item in sample_data:
+        response = requests.post(
+            f"{URL}/objects", json={"class": "Document", "properties": item}
+        )
+        if response.status_code != 200:
+            print(f"Failed to upload data. error: {response.text}")
+            print(f"Failed to upload data. Status code: {response.status_code}")
+            sys.exit(1)
+        print(f"Data with UUID {item['uuid']} uploaded successfully.")
+
+
+# upload data from json file
+def upload_data_from_json(file_path: Path):
+    with open(file_path, "r") as file:
+        data = json.load(file)
+    for item in data:
         response = requests.post(
             f"{URL}/objects", json={"class": "Document", "properties": item}
         )
@@ -109,8 +126,7 @@ def delete_data(uuid=None):
 
 # Main script
 if __name__ == "__main__":
-    # for debugging
-    # check_data()
+    
     if len(sys.argv) < 2 or sys.argv[1] not in [
         "schema",
         "upload",
@@ -119,6 +135,13 @@ if __name__ == "__main__":
         "all",
     ]:
         print("Usage: python script.py {schema|upload|check|delete|all} [uuid]")
+        
+        # for testing
+        print("No valid command provided, run the testing script...")
+        
+        data_path = Path("data/fake_data.json")
+        upload_data_from_json(data_path)
+
         sys.exit(1)
 
     if sys.argv[1] == "schema":
@@ -137,3 +160,5 @@ if __name__ == "__main__":
         create_schema()
         upload_data()
         check_data()
+
+    

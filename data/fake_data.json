@@ -1,0 +1,46 @@
+[
+    {
+        "uuid": "e3b1f1b3-7b3b-4b1f-8e8f-3f1b3b7b3b1f",
+        "title": "The Power of Vector Search",
+        "content": "Vector search engines revolutionize how we store and retrieve information. Unlike traditional search methods that rely on keyword matching, vector search utilizes mathematical representations (vectors) to understand the context and relationships between words, documents, and queries. This approach enables more accurate and contextually relevant search results, making it ideal for applications like natural language processing, recommendation systems, and semantic search.",
+        "permissionLevel": 0,
+        "source": "sample_file.pdf",
+        "publishDate": "2023-05-15",
+        "authorisedDepartments": [
+            "all"
+        ]
+    },
+    {
+        "uuid": "e3b1f1b3-7b3b-4b1f-8e8f-3f1b3b7b3b1e",
+        "title": "Advanced Weaviate Techniques",
+        "content": "Explore in-depth strategies for optimizing Weaviate, an open-source knowledge graph system. Weaviate provides a powerful framework for building semantic applications that understand and respond to natural language queries. In this document, we delve into advanced techniques such as schema design, entity resolution, query optimization, and performance tuning. Whether you're a developer, data scientist, or AI enthusiast, mastering these techniques will unlock the full potential of Weaviate for your projects.",
+        "permissionLevel": 1,
+        "source": "sample_file.pdf",
+        "publishDate": "2023-08-20",
+        "authorisedDepartments": [
+            "all"
+        ]
+    },
+    {
+        "uuid": "e3b1f1b3-7b3b-4b1f-8e8f-3f1b3b7b3b1d",
+        "title": "Sensitive Data Handling",
+        "content": "Learn how to protect your data from unauthorized access and ensure compliance with privacy regulations. Effective sensitive data handling involves implementing encryption, access controls, anonymization techniques, and regular audits. This document provides practical guidance on safeguarding sensitive information across various stages of its lifecycle, from collection and storage to processing and sharing. By following these best practices, organizations can mitigate the risk of data breaches and maintain trust with their customers.",
+        "permissionLevel": 2,
+        "source": "sample_file.pdf",
+        "publishDate": "2023-10-10",
+        "authorisedDepartments": [
+            "all"
+        ]
+    },
+    {
+        "uuid": "e3b1f1b3-7b3b-4b1f-8e8f-3f1b3b7b3b1c",
+        "title": "Introduction to Graph Databases",
+        "content": "Discover the fundamentals of graph databases and their applications in modern data management. Unlike traditional relational databases, graph databases excel at representing and querying interconnected data structures. This document covers key concepts such as nodes, edges, properties, and graph querying languages (e.g., Cypher). Whether you're building social networks, recommendation engines, or fraud detection systems, understanding graph databases is essential for unlocking new insights and solving complex data challenges.",
+        "permissionLevel": 0,
+        "source": "sample_file.pdf",
+        "publishDate": "2023-02-05",
+        "authorisedDepartments": [
+            "all"
+        ]
+    }
+]
