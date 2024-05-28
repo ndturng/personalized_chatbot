@@ -62,7 +62,9 @@ def check_data():
 
     if response.status_code != 200:
         print(f"Failed to retrieve objects. error: {response.text}")
-        print(f"Failed to retrieve objects. Status code: {response.status_code}")
+        print(
+            f"Failed to retrieve objects. Status code: {response.status_code}"
+        )
         sys.exit(1)
 
     objects = response.json().get("objects", [])
