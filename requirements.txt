@@ -1,1 +1,4 @@
 weaviate-client
+langchain_community==0.0.32
+pypdf==4.2.0
+langchain==0.1.16

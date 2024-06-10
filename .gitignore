@@ -39,3 +39,4 @@ yarn-error.log*
 
 local-data
 *.cpython-310.pyc
+*/_pycache_/
