@@ -28,12 +28,12 @@ def slpit_text(docs: list) -> list:
         is_separator_regex=False,
         separators=[
             "\n\n",  # Paragraph break
-            ". ",    # Sentence end
-            ", ",    # Comma with space
-            "\n",    # Line break
-            " ",     # Space
-            ".",     # Period
-            ",",     # Comma
+            ". ",  # Sentence end
+            ", ",  # Comma with space
+            "\n",  # Line break
+            " ",  # Space
+            ".",  # Period
+            ",",  # Comma
             "\u200B",  # Zero-width space
             "\uff0c",  # Fullwidth comma
             "\u3001",  # Ideographic comma
@@ -43,11 +43,21 @@ def slpit_text(docs: list) -> list:
     )
 
     text_chunks = text_splitter.split_documents(docs)
-    print(f"Split {len(docs)} pages of documents into {len(text_chunks)} chunks.")
+    print(
+        f"Split {len(docs)} pages of documents into {len(text_chunks)} chunks."
+    )
+    return text_chunks
+
+
+def process_pdf(data_folder: str) -> list:
+    """
+    Process the pdf files in the given folder.
+    """
+    docs = load_pdf_from_path(data_folder)
+    text_chunks = slpit_text(docs)
     return text_chunks
 
 
 if __name__ == "__main__":
-    docs = load_pdf_from_path(data_folder)
-    text_chunks = slpit_text(docs)
+    text_chunks = process_pdf(data_folder)
     print(text_chunks[0])

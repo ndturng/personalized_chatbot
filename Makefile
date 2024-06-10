@@ -10,16 +10,16 @@ run:
 	docker-compose up -d
 # create schema
 create-schema:
-	python data/weaviate.py schema
+	python data/weaviate_init.py schema
 # upload sample data
 upload-data:
-	python data/weaviate.py upload
+	python data/weaviate_init.py upload
 # check data
 check-data:
-	python data/weaviate.py check
+	python data/weaviate_init.py check
 # delete all data
 delete-data:
-	python data/weaviate.py delete
+	python data/weaviate_init.py delete
 
 # Stop Docker containers
 stop:

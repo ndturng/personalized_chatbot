@@ -1,9 +1,11 @@
 import json
-from pathlib import Path
 import sys
+from pathlib import Path
 
 import requests
+from pdf_process import process_pdf
 
+DATA_FOLDER = "data/storage"
 URL = "http://localhost:8080/v1"
 
 sample_data = [
@@ -19,6 +21,7 @@ sample_data = [
 ]
 
 
+# handle to create better schema
 def create_schema():
     if check_schema("Document"):  # handle to show schema exists
         print("Schema Document exists")
@@ -46,16 +49,30 @@ def check_schema(schema_name=None):
         return True
 
 
-def upload_data():
-    for item in sample_data:
+# upload data from folder
+def upload_data(data_chunk: list):
+    for item in data_chunk:
+        properties = {
+            "title": item.metadata["source"].split("/")[-1],
+            "content": item.page_content,
+            "source": item.metadata["source"]
+            + " - "
+            + "page:"
+            + " "
+            + str(item.metadata["page"]),
+        }
+
         response = requests.post(
-            f"{URL}/objects", json={"class": "Document", "properties": item}
+            f"{URL}/objects",
+            json={"class": "Document", "properties": properties},
         )
+
         if response.status_code != 200:
             print(f"Failed to upload data. error: {response.text}")
             print(f"Failed to upload data. Status code: {response.status_code}")
             sys.exit(1)
-        print(f"Data with UUID {item['uuid']} uploaded successfully.")
+        print(f"Data in {properties['source']} uploaded successfully.")
+    print(f"All of {len(data_chunk)} data chunks uploaded successfully.")
 
 
 # upload data from json file
@@ -101,32 +118,39 @@ def delete_data(uuid=None):
             sys.exit(1)
         print(f"Data with UUID {uuid} deleted successfully.")
     else:
-        response = requests.get(f"{URL}/objects")
-        if response.status_code != 200:
-            print(f"Failed to retrieve objects. error: {response.text}")
-            print(
-                f"Failed to retrieve objects. Status code: {response.status_code}"
-            )
-            sys.exit(1)
-
-        objects = response.json().get("objects", [])
-        for obj in objects:
-            obj_uuid = obj["id"]
-            delete_response = requests.delete(f"{URL}/objects/{obj_uuid}")
-            if delete_response.status_code not in [200, 204]:
+        while True:
+            response = requests.get(f"{URL}/objects")
+            # check if there are objects to delete
+            if response.status_code != 200:
+                print(f"Failed to retrieve objects. error: {response.text}")
                 print(
-                    f"Failed to delete data with UUID {obj_uuid}. error: {delete_response.text}"
-                )
-                print(
-                    f"Failed to delete data. Status code: {delete_response.status_code}"
+                    f"Failed to retrieve objects. Status code: {response.status_code}"
                 )
                 sys.exit(1)
-            print(f"Data with UUID {obj_uuid} deleted successfully.")
+
+            objects = response.json().get("objects", [])
+
+            if not objects:
+                print("No more objects to delete.")
+                break
+
+            for obj in objects:
+                obj_uuid = obj["id"]
+                delete_response = requests.delete(f"{URL}/objects/{obj_uuid}")
+                if delete_response.status_code not in [200, 204]:
+                    print(
+                        f"Failed to delete data with UUID {obj_uuid}. error: {delete_response.text}"
+                    )
+                    print(
+                        f"Failed to delete data. Status code: {delete_response.status_code}"
+                    )
+                    sys.exit(1)
+                print(f"Data with UUID {obj_uuid} deleted successfully.")
 
 
 # Main script
 if __name__ == "__main__":
-    
+
     if len(sys.argv) < 2 or sys.argv[1] not in [
         "schema",
         "upload",
@@ -135,12 +159,12 @@ if __name__ == "__main__":
         "all",
     ]:
         print("Usage: python script.py {schema|upload|check|delete|all} [uuid]")
-        
+
         # for testing
-        print("No valid command provided, run the testing script...")
-        
-        data_path = Path("data/fake_data.json")
-        upload_data_from_json(data_path)
+        # print("No valid command provided, run the testing script...")
+
+        # data_path = Path("data/fake_data.json")
+        # upload_data_from_json(data_path)
 
         sys.exit(1)
 
@@ -148,7 +172,8 @@ if __name__ == "__main__":
         create_schema()
     elif sys.argv[1] == "upload":
         create_schema()
-        upload_data()
+        data_chunks = process_pdf(DATA_FOLDER)
+        upload_data(data_chunks)
     elif sys.argv[1] == "check":
         check_data()
     elif sys.argv[1] == "delete":
@@ -160,5 +185,3 @@ if __name__ == "__main__":
         create_schema()
         upload_data()
         check_data()
-
-    
