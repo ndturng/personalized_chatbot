@@ -2,6 +2,7 @@ import sys
 
 import weaviate
 from weaviate.classes.init import AdditionalConfig, Timeout
+from weaviate.classes.query import MetadataQuery
 from weaviate.connect import ConnectionParams
 
 # Constants
@@ -30,9 +31,17 @@ def query_similar_documents(query, top_k=5):
 
     try:
         publications = client.collections.get("Document")
-        response = publications.query.near_text(
+        response = publications.query.hybrid(  # Based on the usecase, consider using hybrid or near_text
             query=query,
             limit=top_k,
+            return_metadata=MetadataQuery(
+                certainty=True,
+                distance=True, 
+                # explain_score=True,
+                # is_consistent=True,
+                # rerank=True, this require to add a module
+                score=True,
+            )
         )
     finally:
         client.close()
@@ -40,9 +49,12 @@ def query_similar_documents(query, top_k=5):
     print(f"Query text: {query}\n")
     print(f"Top {top_k} similar documents:")
     for obj in response.objects:
+        
         # print(f"UUID: {obj.properties['uuid']}")
         print(f"Source: {obj.properties['source']}")
         print(f"Content: {obj.properties['content']}\n")
+    
+    return response.objects
 
 
 # Main script
