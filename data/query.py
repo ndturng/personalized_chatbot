@@ -8,7 +8,7 @@ from weaviate.connect import ConnectionParams
 URL = "http://localhost:8080"
 
 # Sample query text
-query_text = "Explain the benefits of vector search engines."
+query_text = "What about the customer service?"
 
 
 def query_similar_documents(query, top_k=5):
@@ -37,19 +37,22 @@ def query_similar_documents(query, top_k=5):
     finally:
         client.close()
 
+    print(f"Query text: {query}\n")
+    print(f"Top {top_k} similar documents:")
     for obj in response.objects:
-        print(f"UUID: {obj.properties['uuid']}")
-        print(f"Title: {obj.properties['title']}")
+        # print(f"UUID: {obj.properties['uuid']}")
+        print(f"Source: {obj.properties['source']}")
         print(f"Content: {obj.properties['content']}\n")
 
 
 # Main script
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python script.py query [top_k]")
-        sys.exit(1)
+    # if len(sys.argv) < 2:
+    #     print("Usage: python script.py query [top_k]")
+    #     sys.exit(1)
 
-    query = sys.argv[1]
+    # query = sys.argv[1]
+    
     top_k = int(sys.argv[2]) if len(sys.argv) > 2 else 5
 
-    query_similar_documents(query, top_k)
+    query_similar_documents(query_text, top_k)
