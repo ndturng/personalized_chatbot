@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 import requests
-from pdf_process import process_pdf
+from data.pdf_process import process_pdf
 
 DATA_FOLDER = "data/storage"
 URL = "http://localhost:8080/v1"
@@ -22,31 +22,47 @@ sample_data = [
 
 
 # handle to create better schema
-def create_schema():
-    if check_schema("Document"):  # handle to show schema exists
-        print("Schema Document exists")
+def create_schema(
+    schema_name: str = "ExampleSchema",
+    vectorizer: str = "text2vec-contextionary",
+    moduleConfig: dict = {"text2vec-contextionary": {}},
+):
+    if check_schema(schema_name):  # handle to show schema exists
+        print(f"Schema {schema_name} already exists.")
         return
+    else:
+        print(f"Creating schema {schema_name}...")
     schema_data = {
-        "class": "Document",
-        "vectorizer": "text2vec-contextionary",
-        "moduleConfig": {"text2vec-contextionary": {}},
+        "class": schema_name,
+        "vectorizer": vectorizer,
+        "moduleConfig": moduleConfig,
     }
-    response = requests.post(f"{URL}/schema", json=schema_data)
-    if response.status_code != 200:
-        print(f"Failed to create schema. error: {response.text}")
-        print(f"Failed to create schema. Status code: {response.status_code}")
+    create_schema_response = requests.post(f"{URL}/schema", json=schema_data)
+    if create_schema_response.status_code != 200:
+        print(f"Failed to create schema. error: {create_schema_response.text}")
+        print(f"Failed to create schema. Status code: {create_schema_response.status_code}")
         sys.exit(1)
-    print(response.text)
 
 
 def check_schema(schema_name=None):
     response = requests.get(f"{URL}/schema/{schema_name}")
     if response.status_code != 200:
-        print(f"Failed to get schema. error: {response.text}")
-        print(f"Failed to get schema. Status code: {response.status_code}")
         return False
     else:
         return True
+
+
+def delete_schema(schema_name: str):
+    if not check_schema(schema_name):  # check if the schema exists
+        print(f"Schema {schema_name} does not exist.")
+        return
+
+    response = requests.delete(f"{URL}/schema/{schema_name}")
+    if response.status_code != 200:
+        print(f"Failed to delete schema. Error: {response.text}")
+        print(f"Failed to delete schema. Status code: {response.status_code}")
+        sys.exit(1)
+    print(f"Schema {schema_name} deleted successfully.")
 
 
 # upload data from folder
@@ -162,9 +178,10 @@ if __name__ == "__main__":
 
         # for testing
         # print("No valid command provided, run the testing script...")
-
-        # data_path = Path("data/fake_data.json")
-        # upload_data_from_json(data_path)
+        # create_schema()
+        # delete_schema("ExampleSchema")
+        # if check_schema("ExampleSchema"): 
+        #     print("Schema exists")
 
         sys.exit(1)
 
