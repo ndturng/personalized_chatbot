@@ -1,6 +1,6 @@
 from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-
+from langchain_core.documents.base import Document
 # Data folder
 data_folder = "data/storage"
 
@@ -16,7 +16,7 @@ def load_pdf_from_path(path: str) -> list:
     return docs
 
 
-def slpit_text(docs: list) -> list:
+def slpit_text(docs: list) -> list[Document]:
     """
     Split the text into text chunks.
     """

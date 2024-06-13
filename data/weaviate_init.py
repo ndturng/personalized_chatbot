@@ -3,7 +3,11 @@ import sys
 from pathlib import Path
 
 import requests
-from data.pdf_process import process_pdf
+from langchain_core.documents.base import Document
+
+# Add the parent directory to sys.path
+sys.path.append(str(Path(__file__).resolve().parent))
+from pdf_process import process_pdf
 
 DATA_FOLDER = "data/storage"
 URL = "http://localhost:8080/v1"
@@ -40,7 +44,9 @@ def create_schema(
     create_schema_response = requests.post(f"{URL}/schema", json=schema_data)
     if create_schema_response.status_code != 200:
         print(f"Failed to create schema. error: {create_schema_response.text}")
-        print(f"Failed to create schema. Status code: {create_schema_response.status_code}")
+        print(
+            f"Failed to create schema. Status code: {create_schema_response.status_code}"
+        )
         sys.exit(1)
 
 
@@ -66,21 +72,21 @@ def delete_schema(schema_name: str):
 
 
 # upload data from folder
-def upload_data(data_chunk: list):
-    for item in data_chunk:
+def upload_data(data_chunks: list[Document], schema_name: str):
+    for chunk in data_chunks:
         properties = {
-            "title": item.metadata["source"].split("/")[-1],
-            "content": item.page_content,
-            "source": item.metadata["source"]
+            "title": chunk.metadata["source"].split("/")[-1],
+            "content": chunk.page_content,
+            "source": chunk.metadata["source"]
             + " - "
             + "page:"
             + " "
-            + str(item.metadata["page"]),
+            + str(chunk.metadata["page"]),
         }
 
         response = requests.post(
             f"{URL}/objects",
-            json={"class": "Document", "properties": properties},
+            json={"class": f"{schema_name}", "properties": properties},
         )
 
         if response.status_code != 200:
@@ -88,7 +94,7 @@ def upload_data(data_chunk: list):
             print(f"Failed to upload data. Status code: {response.status_code}")
             sys.exit(1)
         print(f"Data in {properties['source']} uploaded successfully.")
-    print(f"All of {len(data_chunk)} data chunks uploaded successfully.")
+    print(f"All of {len(data_chunks)} data chunks uploaded successfully.")
 
 
 # upload data from json file
@@ -180,7 +186,7 @@ if __name__ == "__main__":
         # print("No valid command provided, run the testing script...")
         # create_schema()
         # delete_schema("ExampleSchema")
-        # if check_schema("ExampleSchema"): 
+        # if check_schema("ExampleSchema"):
         #     print("Schema exists")
 
         sys.exit(1)
@@ -188,9 +194,9 @@ if __name__ == "__main__":
     if sys.argv[1] == "schema":
         create_schema()
     elif sys.argv[1] == "upload":
-        create_schema()
+        create_schema("ExampleSchema")
         data_chunks = process_pdf(DATA_FOLDER)
-        upload_data(data_chunks)
+        upload_data(data_chunks, "ExampleSchema")
     elif sys.argv[1] == "check":
         check_data()
     elif sys.argv[1] == "delete":
