@@ -1,4 +1,3 @@
-import json
 import sys
 from pathlib import Path
 
@@ -97,38 +96,6 @@ def upload_data(data_chunks: list[Document], schema_name: str):
     print(f"All of {len(data_chunks)} data chunks uploaded successfully.")
 
 
-# upload data from json file
-def upload_data_from_json(file_path: Path):
-    with open(file_path, "r") as file:
-        data = json.load(file)
-    for item in data:
-        response = requests.post(
-            f"{URL}/objects", json={"class": "Document", "properties": item}
-        )
-        if response.status_code != 200:
-            print(f"Failed to upload data. error: {response.text}")
-            print(f"Failed to upload data. Status code: {response.status_code}")
-            sys.exit(1)
-        print(f"Data with UUID {item['uuid']} uploaded successfully.")
-
-
-def check_data():
-    print("Checking data...")
-    response = requests.get(f"{URL}/objects")
-
-    if response.status_code != 200:
-        print(f"Failed to retrieve objects. error: {response.text}")
-        print(
-            f"Failed to retrieve objects. Status code: {response.status_code}"
-        )
-        sys.exit(1)
-
-    objects = response.json().get("objects", [])
-    for obj in objects:
-        obj_uuid = obj["properties"]["uuid"]
-        print(f"Data with UUID {obj_uuid} exists.")
-
-
 def delete_data(uuid=None):
     if uuid:
         response = requests.delete(f"{URL}/objects/{uuid}")
@@ -197,8 +164,6 @@ if __name__ == "__main__":
         create_schema("ExampleSchema")
         data_chunks = process_pdf(DATA_FOLDER)
         upload_data(data_chunks, "ExampleSchema")
-    elif sys.argv[1] == "check":
-        check_data()
     elif sys.argv[1] == "delete":
         if len(sys.argv) == 3:
             delete_data(sys.argv[2])
@@ -207,4 +172,3 @@ if __name__ == "__main__":
     elif sys.argv[1] == "all":
         create_schema()
         upload_data()
-        check_data()
