@@ -20,7 +20,9 @@ check-data:
 # delete all data
 delete-data:
 	python data/weaviate_init.py delete
-
+# query data
+query-data:
+	python data/query.py
 # Stop Docker containers
 stop:
 	docker-compose down

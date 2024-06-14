@@ -11,11 +11,8 @@ logger = logging.getLogger(__name__)
 # Constants
 URL = "http://localhost:8080"
 
-# Sample query text
-query_text = "What about the customer service?"
 
-
-def query_similar_documents(query, top_k=5):
+def query_similar_documents(query_text, top_k=5, schema_name="ExampleSchema"):
     client = weaviate.WeaviateClient(
         connection_params=ConnectionParams.from_params(
             http_host="localhost",
@@ -38,9 +35,9 @@ def query_similar_documents(query, top_k=5):
         return None  # Optionally return an empty list or handle as needed
 
     try:
-        publications = client.collections.get("Document")
+        publications = client.collections.get(schema_name)
         response = publications.query.hybrid(  # Based on the usecase, consider using hybrid or near_text
-            query=query,
+            query=query_text,
             limit=top_k,
             return_metadata=MetadataQuery(
                 certainty=True,
@@ -52,11 +49,11 @@ def query_similar_documents(query, top_k=5):
             ),
         )
 
-    except Exception as e:
+    except Exception:
         logger.error(
             "Query failed", exc_info=False
         )  # exc_info=True for debugging
-        raise e
+        return None
 
     finally:
         client.close()
@@ -66,11 +63,13 @@ def query_similar_documents(query, top_k=5):
 
 # Main script
 if __name__ == "__main__":
-    # if len(sys.argv) < 2:
-    #     print("Usage: python script.py query [top_k]")
-    #     sys.exit(1)
-
-    # query = sys.argv[1]
+    if len(sys.argv) < 2:
+        print("Usage: python data/query.py 'query text' [top_k]")
+        print("No arguments provided. Using the default query text.")
+        # Sample query text
+        query_text = "What about the customer service?"
+    else:
+        query_text = sys.argv[1]
 
     top_k = int(sys.argv[2]) if len(sys.argv) > 2 else 5
 
