@@ -1,18 +1,19 @@
+import subprocess
+
 import requests
 from langchain_core.documents.base import Document
 
-from data.weaviate_init import create_schema, delete_schema, upload_data
-
 from constants import URL
+from data.weaviate_init import create_schema, delete_schema, upload_data
 
 
 def test_create_delete_schema():
     """
-    Test create_schema function
-    run these command before running the test:
-    - make run
-
+    Test create_schema function and delete_schema function
     """
+    # start the server
+    subprocess.run(["make", "run"])
+
     schema_name = "ExampleSchema"
     create_schema(schema_name)
     # schema ExampleSchema should be exit at URL/schema/ExampleSchema
@@ -28,13 +29,10 @@ def test_create_delete_schema():
 def test_upload_data():
     """
     Test upload_data function
-    run these command before running the test:
-    - make run
     """
-    #   {
-    #             "page_content": "This is a sample text",
-    #             "metadata": {"source": "sample/source.pdf", "page": 0},
-    #         }
+    # start the server
+    subprocess.run(["make", "run"])
+
     sample_data = [
         Document(
             page_content="This is a sample text",

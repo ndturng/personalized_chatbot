@@ -1,4 +1,5 @@
 import subprocess
+
 from data.pdf_process import process_pdf
 from data.query import query_similar_documents
 from data.weaviate_init import create_schema, delete_schema, upload_data
@@ -7,8 +8,6 @@ from data.weaviate_init import create_schema, delete_schema, upload_data
 def test_query():
     """
     - Run the tests of create_schema, delete_schema, and upload_data before running this test.
-    - Run the command below to start the server before running the test:
-        + make run
     """
     # start the server
     subprocess.run(["make", "run"])
