@@ -8,8 +8,8 @@ from weaviate.connect import ConnectionParams
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
-# Constants
-URL = "http://localhost:8080"
+
+from constants import URL
 
 
 def query_similar_documents(query_text, top_k=5, schema_name="ExampleSchema"):
@@ -18,7 +18,7 @@ def query_similar_documents(query_text, top_k=5, schema_name="ExampleSchema"):
             http_host="localhost",
             http_port="8080",
             http_secure=False,
-            grpc_host="localhost",  # A mine
+            grpc_host="localhost",
             grpc_port="50051",
             grpc_secure=False,
         ),

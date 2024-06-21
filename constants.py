@@ -1,0 +1,2 @@
+DATA_FOLDER = "data/storage"
+URL = "http://localhost:8080/v1"

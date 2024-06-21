@@ -8,20 +8,7 @@ from langchain_core.documents.base import Document
 sys.path.append(str(Path(__file__).resolve().parent))
 from pdf_process import process_pdf
 
-DATA_FOLDER = "data/storage"
-URL = "http://localhost:8080/v1"
-
-sample_data = [
-    {
-        "uuid": "e3b1f1b3-7b3b-4b1f-8e8f-3f1b3b7b3b1f",
-        "title": "The Power of Vector Search",
-        "content": "Vector search engines revolutionize how we store and retrieve information. Unlike traditional search methods that rely on keyword matching, vector search utilizes mathematical representations (vectors) to understand the context and relationships between words, documents, and queries. This approach enables more accurate and contextually relevant search results, making it ideal for applications like natural language processing, recommendation systems, and semantic search.",
-        "permissionLevel": 0,
-        "source": "sample_file.pdf",
-        "publishDate": "2023-05-15",
-        "authorisedDepartments": ["all"],
-    }
-]
+from constants import DATA_FOLDER, URL
 
 
 # handle to create better schema
@@ -47,6 +34,8 @@ def create_schema(
             f"Failed to create schema. Status code: {create_schema_response.status_code}"
         )
         sys.exit(1)
+    else:
+        print(f"Schema {schema_name} created successfully.")
 
 
 def check_schema(schema_name=None):

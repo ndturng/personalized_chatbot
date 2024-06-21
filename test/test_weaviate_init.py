@@ -3,7 +3,7 @@ from langchain_core.documents.base import Document
 
 from data.weaviate_init import create_schema, delete_schema, upload_data
 
-URL = "http://localhost:8080/v1"
+from constants import URL
 
 
 def test_create_delete_schema():
