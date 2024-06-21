@@ -9,7 +9,7 @@ from weaviate.connect import ConnectionParams
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
 
-from constants import URL
+from untils.constants import URL
 
 
 def query_similar_documents(query_text, top_k=5, schema_name="ExampleSchema"):

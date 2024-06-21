@@ -3,8 +3,9 @@ import subprocess
 import requests
 from langchain_core.documents.base import Document
 
-from constants import URL
 from data.weaviate_init import create_schema, delete_schema, upload_data
+from untils.constants import URL
+from untils.untils import wait_for_server
 
 
 def test_create_delete_schema():
@@ -13,6 +14,8 @@ def test_create_delete_schema():
     """
     # start the server
     subprocess.run(["make", "run"])
+    # wait for the server to start
+    wait_for_server(URL)
 
     schema_name = "ExampleSchema"
     create_schema(schema_name)
@@ -25,6 +28,9 @@ def test_create_delete_schema():
     response = requests.get(f"{URL}/schema/{schema_name}")
     assert response.status_code == 404
 
+    # stop the server
+    subprocess.run(["make", "stop"])
+
 
 def test_upload_data():
     """
@@ -32,6 +38,9 @@ def test_upload_data():
     """
     # start the server
     subprocess.run(["make", "run"])
+
+    # wait for the server to start
+    wait_for_server(URL)
 
     sample_data = [
         Document(
@@ -51,3 +60,6 @@ def test_upload_data():
     delete_schema("ExampleSchema")
     response = requests.get(f"{URL}/schema/ExampleSchema")
     assert response.status_code == 404
+
+    # stop the server
+    subprocess.run(["make", "stop"])

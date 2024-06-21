@@ -8,7 +8,7 @@ from langchain_core.documents.base import Document
 sys.path.append(str(Path(__file__).resolve().parent))
 from pdf_process import process_pdf
 
-from constants import DATA_FOLDER, URL
+from untils.constants import DATA_FOLDER, URL
 
 
 # handle to create better schema
