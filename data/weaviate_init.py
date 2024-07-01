@@ -1,3 +1,4 @@
+import os
 import sys
 from pathlib import Path
 
@@ -6,6 +7,7 @@ from langchain_core.documents.base import Document
 
 # Add the parent directory to sys.path
 sys.path.append(str(Path(__file__).resolve().parent))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from pdf_process import process_pdf
 
 from untils.constants import DATA_FOLDER, URL

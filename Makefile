@@ -27,6 +27,10 @@ query-data:
 stop:
 	docker-compose down
 
+# run streamlit app
+app:
+	streamlit run front_end/app.py 
+
 # Display help message
 help:
 	@echo ""

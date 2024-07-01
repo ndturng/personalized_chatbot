@@ -57,9 +57,8 @@ def generate_response_from_results(query_result, query_text):
         source = obj.properties["source"]
         content = obj.properties["content"]
 
-        source_info = f">File: {source} - \
-            Source: {content}\
-            \n>>> {content}\n\n"
+        source_info = f">File: {source} \
+            \n\n>> Content:\n\n {content}\n\n"
 
         sources.append(source_info)
 

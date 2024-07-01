@@ -3,3 +3,4 @@ langchain_community
 pypdf
 langchain
 langchain-openai
+streamlit
