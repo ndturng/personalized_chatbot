@@ -1,0 +1,36 @@
+{
+    "name": "Personalized Chatbot",
+    "build": {
+      "dockerfile": "Dockerfile",
+      "context": ".."
+    },
+    "runArgs": ["--init"],
+    "customizations": {
+        "settings": {
+            "terminal.integrated.shell.linux": "/bin/bash"
+        },
+        "extensions": [
+            "ms-python.python",
+            "ms-toolsai.jupyter",
+            "ms-azuretools.vscode-docker"
+        ]
+    },
+    "postCreateCommand": "docker-compose up -d && streamlit run front_end/app.py",
+    "remoteEnv": {
+      "PYTHONPATH": "${containerWorkspaceFolder}"
+    },
+    "forwardPorts": [8080, 8501],
+    "portsAttributes": {
+      "8080": {
+        "label": "Weaviate",
+        "onAutoForward": "openPreview"
+      },
+      "8501": {
+        "label": "Streamlit"
+      }
+    },
+    "remoteUser": "root",
+    "mounts": [
+      "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+    ]
+  }
